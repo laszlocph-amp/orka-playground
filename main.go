@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -51,6 +52,39 @@ func metricsMiddleware(next http.HandlerFunc, endpoint string) http.HandlerFunc 
 
 
 
+type SampleRequest struct {
+	Name    string `json:"name"`
+	Message string `json:"message"`
+}
+
+type SampleResponse struct {
+	ID      int    `json:"id"`
+	Status  string `json:"status"`
+	Echo    string `json:"echo"`
+}
+
+func samplePostHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req SampleRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	response := SampleResponse{
+		ID:     123,
+		Status: "success",
+		Echo:   fmt.Sprintf("Hello %s: %s", req.Name, req.Message),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
 func main() {
 	// Metrics server on dedicated port
 	metricsServeMux := http.NewServeMux()
@@ -63,8 +97,11 @@ func main() {
 
 	// Main server
 	mainServeMux := http.NewServeMux()
+	mainServeMux.HandleFunc("/api/sample", metricsMiddleware(samplePostHandler, "/api/sample"))
 	
 	log.Println("Main server starting on :8080")
+	log.Println("Endpoints available:")
+	log.Println("  POST /api/sample - Sample endpoint")
 	log.Println("Metrics server available on :9090/metrics")
 	log.Fatal(http.ListenAndServe(":8080", mainServeMux))
 }
