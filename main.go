@@ -74,6 +74,8 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	log.Println("Hello, World!")
+	
 	http.HandleFunc("/", instrumentHandler("/", helloHandler))
 	http.HandleFunc("/post", instrumentHandler("/post", postHandler))
 	http.Handle("/metrics", promhttp.Handler())
