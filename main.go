@@ -97,11 +97,11 @@ func main() {
 
 	// Main server
 	mainServeMux := http.NewServeMux()
-	mainServeMux.HandleFunc("/api/sample", metricsMiddleware(samplePostHandler, "/api/sample"))
+	mainServeMux.HandleFunc("/api/sample2", metricsMiddleware(samplePostHandler, "/api/sample2"))
 	
 	log.Println("Main server starting on :8080")
 	log.Println("Endpoints available:")
-	log.Println("  POST /api/sample - Sample endpoint")
+	log.Println("  POST /api/sample2 - Sample endpoint")
 	log.Println("Metrics server available on :9090/metrics")
 	log.Fatal(http.ListenAndServe(":8080", mainServeMux))
 }
