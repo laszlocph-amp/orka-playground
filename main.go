@@ -52,11 +52,19 @@ func metricsMiddleware(next http.HandlerFunc, endpoint string) http.HandlerFunc 
 
 
 func main() {
-	http.Handle("/metrics", promhttp.Handler())
+	// Metrics server on dedicated port
+	metricsServeMux := http.NewServeMux()
+	metricsServeMux.Handle("/metrics", promhttp.Handler())
+	
+	go func() {
+		log.Println("Metrics server starting on :9090")
+		log.Fatal(http.ListenAndServe(":9090", metricsServeMux))
+	}()
 
-	log.Println("Server starting on :8080")
-	log.Println("Endpoints available:")
-	log.Println("  GET /metrics - Prometheus metrics")
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// Main server
+	mainServeMux := http.NewServeMux()
+	
+	log.Println("Main server starting on :8080")
+	log.Println("Metrics server available on :9090/metrics")
+	log.Fatal(http.ListenAndServe(":8080", mainServeMux))
 }
