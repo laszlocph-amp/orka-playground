@@ -10,8 +10,17 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
 }
 
+func postHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	fmt.Fprintf(w, "POST request received!")
+}
+
 func main() {
 	http.HandleFunc("/", helloHandler)
-	fmt.Println("Server starting on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	http.HandleFunc("/post", postHandler)
+	fmt.Println("Server starting on port 9000...")
+	log.Fatal(http.ListenAndServe(":9000", nil))
 }
