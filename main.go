@@ -80,6 +80,7 @@ func main() {
 	log.Println("Hello, World!")
 	log.Println("Hello, World!")
 	log.Println("Hello, World!")
+	log.Println("Hello, World!")
 	
 	http.HandleFunc("/", instrumentHandler("/", helloHandler))
 	http.HandleFunc("/post", instrumentHandler("/post", postHandler))
