@@ -45,21 +45,17 @@ func metricsMiddleware(next http.HandlerFunc, endpoint string) http.HandlerFunc 
 	}
 }
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World!\n")
-}
+
 
 
 
 
 
 func main() {
-	http.HandleFunc("/", metricsMiddleware(helloHandler, "/"))
 	http.Handle("/metrics", promhttp.Handler())
 
 	log.Println("Server starting on :8080")
 	log.Println("Endpoints available:")
-	log.Println("  GET / - Hello World")
 	log.Println("  GET /metrics - Prometheus metrics")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
