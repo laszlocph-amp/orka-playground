@@ -45,7 +45,6 @@ func metricsMiddleware(next http.Handler) http.Handler {
 		start := time.Now()
 		log.Printf("Incoming request: %s %s from %s", r.Method, r.URL.Path, r.RemoteAddr)
 		
-		// Create a response writer wrapper to capture status code
 		ww := &responseWriter{ResponseWriter: w, statusCode: 200}
 		
 		next.ServeHTTP(ww, r)
@@ -97,7 +96,6 @@ func main() {
 	mux.Handle("/metrics", promhttp.Handler())
 	log.Println("All handlers registered successfully")
 	
-	// Apply metrics middleware
 	handler := metricsMiddleware(mux)
 	log.Println("Metrics middleware applied")
 	
