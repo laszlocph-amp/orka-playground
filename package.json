@@ -1,0 +1,20 @@
+{
+  "name": "hello-world-web-ts",
+  "version": "1.0.0",
+  "description": "Hello World web server with metrics in TypeScript",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "prom-client": "^15.1.3"
+  }
+}
