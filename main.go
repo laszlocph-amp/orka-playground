@@ -49,22 +49,17 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!\n")
 }
 
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "OK\n")
-}
+
 
 
 
 func main() {
 	http.HandleFunc("/", metricsMiddleware(helloHandler, "/"))
-	http.HandleFunc("/health", metricsMiddleware(healthHandler, "/health"))
 	http.Handle("/metrics", promhttp.Handler())
 
 	log.Println("Server starting on :8080")
 	log.Println("Endpoints available:")
 	log.Println("  GET / - Hello World")
-	log.Println("  GET /health - Health check")
 	log.Println("  GET /metrics - Prometheus metrics")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
